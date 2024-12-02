@@ -1,44 +1,51 @@
+<template>
+  <div>
+    <h1>Чеклист</h1>
+    <input v-model="newTask" placeholder="Добавьте новое дело" @keyup.enter="addTask" />
+    <ul>
+      <li v-for="(task, index) in tasks" :key="index">
+        <span :class="{ completed: task.completed }">{{ task.text }}</span>
+        <button @click="toggleTask(index)">{{ task.completed ? 'Не выполнено' : 'Выполнено' }}</button>
+        <button @click="editTask(index)">Редактировать</button>
+        <button @click="removeTask(index)">Удалить</button>
+      </li>
+    </ul>
+  </div>
+</template>
+
 <script>
 export default {
   data() {
-	return {
-		newItem: 'пропишите ваше дело',
-    items: [],
-  }
+    return {
+      newTask: '', // Переменная для нового дела
+      tasks: [], // Массив дел
+    };
   },
-
-
-methods: {
-	addItem: function() {
-		this.items.push(this.newItem);
-	}
-}
-
-}
-
+  methods: {
+    addTask() {
+      if (this.newTask) {
+        this.tasks.push({ text: this.newTask, completed: false }); // Добавляем новое дело
+        this.newTask = ''; // Очищаем поле ввода
+      }
+    },
+    removeTask(index) {
+      this.tasks.splice(index, 1); // Удаляем дело по индексу
+    },
+    toggleTask(index) {
+      this.tasks[index].completed = !this.tasks[index].completed; // Переключаем статус выполнения
+    },
+    editTask(index) {
+      const updatedTask = prompt("Редактировать дело:", this.tasks[index].text);
+      if (updatedTask !== null) {
+        this.tasks[index].text = updatedTask; // Обновляем текст дела
+      }
+    },
+  },
+};
 </script>
 
-<template>
-  <h1>Чек-лист</h1>
-
-  <h2>Список запланированных дел</h2>
-
-  <ul>
-    <li v-for="(item,index) in items" :key="index">
-      <input type="checkbox" name="" id=""></input>
-      <label for="task1"> {{ newItem }} </label>
-      <button type="button">Редактировать</button>
-      <button type="button">Удалить задачу</button>
-    </li>
-
-
-
-    <li><button @click="addItem" type="button">Добавить задачу</button></li>
-
-  </ul>
-
-</template>
-
 <style>
-
+.completed {
+  text-decoration: line-through; /* Перечеркивание текста выполненных дел */
+}
 </style>
